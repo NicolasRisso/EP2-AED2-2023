@@ -17,7 +17,7 @@ bTree* createTree(char* fileName,bool mode)
         tree->root = 0;
         tree->nextPos = 0;
     } else {
-        FILE *oldFile = fopen("tree.dat", "r");
+        FILE *oldFile = fopen("tree.dat", "r"); // arquivo para ser lido
         fread(tree, sizeof(bTree), 1, oldFile);
         fclose(oldFile);
     }
@@ -44,21 +44,25 @@ bTreeNode* nodeInit(bTreeNode* node,bool isLeaf,bTree* tree)
 	return node;
 }
 
+// Escreve um nó em memória
 void writeFile(bTree* ptr_tree, bTreeNode* p, int pos) {
-    if(pos == -1) {
+    
+    if(pos == -1) {   // pos == -1 é posição não especificada. Será inserido na ultima posição
         pos = ptr_tree->nextPos++;
     }
 
-    fseek(ptr_tree->fp, pos * sizeof(bTreeNode), 0);
-    fwrite(p, sizeof(bTreeNode), 1, ptr_tree->fp);
+    fseek(ptr_tree->fp, pos * sizeof(bTreeNode), 0);  // função que realiza um seek
+    fwrite(p, sizeof(bTreeNode), 1, ptr_tree->fp);   // função que escreve na memoria secundária
     
 }
 
+// Lê um nó da memória
 void readFile(bTree* ptr_tree, bTreeNode* p, int pos) {    
     fseek(ptr_tree->fp, pos * sizeof(bTreeNode), SEEK_SET);
-    fread(p, sizeof(bTreeNode), 1, ptr_tree->fp);
+    fread(p, sizeof(bTreeNode), 1, ptr_tree->fp);     // função que le a memória secudária e armazena na memoria RAM
 }
 
+// insere no nó os valores passados pela função
 void enterData(recordNode* record, int id_num, char country[], char grate[], int score, int rate) {
     
     record->key = id_num;
@@ -69,6 +73,7 @@ void enterData(recordNode* record, int id_num, char country[], char grate[], int
     
     return;
 }
+
 
 recordNode* getData(char *filepath, int len) {
     
