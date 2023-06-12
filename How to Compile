@@ -1,0 +1,12 @@
+#Alterar a ordem da árvore
+> em headers.h mudar o t em #define t para o valor desejado de ordem
+
+#Compilar para procurar key
+gcc run.c -o run.exe
+./run.exe -s [NUMERO DA KEY QUE ESTA PROCURANDO]
+
+#Compilar para construir uma árvore
+./run.exe -b
+
+#Compilar para deletar uma chave
+./run.exe -d [NUMERO DA KEU PARA DELETAR]
