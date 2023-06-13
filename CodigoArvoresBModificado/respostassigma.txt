@@ -1,0 +1,71 @@
+1. Qual a diferença entre pos de bTreeNode e nextPos de tree?
+    O campo 'pos' de 'bTreeNode' representa a posição do nó atual dentro da árvore, enquanto o 'nextPos' mantém o controle da posição livre disponível para o próximo nó a ser inserido.
+
+
+2. Quais as funções relacionadas com a inserção e o que cada uma delas faz? A inserção dessa implementação funciona corretamente? Caso não, que mudanças foram feitas e em que funções para obter uma versão correta da
+inserção? Por exemplo, teste com make all t=3 ./run -b How many records do you want to build from dataset? 28 Faça um desenho da árvore B que deveria ser criada mostrando as chaves dos registros. A lista de links de
+todos os nós criados pelo algoritmo está correta?
+    As funções relacionadas à inserção são 'insert()' e 'insertNonFull()'. 
+
+    'insert()', como o nome sugere, insere um novo registro na árvore e, se ela estiver vazia, cria um novo nó para alocá-lo. 
+    Caso a raiz esteja cheia, é criado um novo nó raiz e a anterior é dividida. É chamada, então, a função 'insertNonFull()' para inserir 
+    o registro no nó filho apropriado. No caso da raiz não estar cheia, a função 'insertNonFull()' é chamada diretamente para incluir o registro.
+
+    'insertNonFull()' insere um valor no nó 'x' da árvore caso ele não esteja cheio. Para tal, verifica se 'x' é uma folha e, caso positivo, encontra uma posição correta para inserir o novo registro, deslocando registros
+    maiores para a direita e inserindo o novo. Caso 'x' não seja uma folha, encontra-se o nó filho apropriado para a inserção e a executa, recursivamente.
+
+    A inserção funciona corretamentamente. Nada foi modificado do código original.
+
+    Abra a imagem "desenho questão 2.png" para verificar a resposta. Sim, a lista de links de todos os nós está correta.
+
+
+!3. Quais as funções relacionadas com a remoção e o que cada uma delas faz? A remoção dessa implementação funciona corretamente? Caso não, que mudanças foram feitas e em que funções para obter uma versão correta da remoção?
+Faça as remoções dos seguintes registros da árvore criada no item 2: 774597, 996522, 782891 e 676106. Faça um desenho do estado da árvore após essas remoções.
+    As funções relacionadas à remoção são 'removeFromLeaf()', 'removeFromNonLeaf()' e 'removeNode()'
+
+    'removeFromLeaf()' remove um nó da arvore quando esse nó é uma folha. Rearranja os registros no nó e remove o de posição 'idx', deslocando os subsequentes para preencher o espaço vazio, atualizando depois o npumero
+    de registros no nó.
+
+    'removeFromNonLeaf()' remove um nó não-folha da árvore. A princípio, obtém o valor 'k' a ser removido do nó atual e lê os filhos e irmão apropriados. Depois, caso o filho atual possua 't' chaves (t = grau mínimo da
+    árvore), encontra o predecessor de 'k' e substitui 'k' no nó atual por esse predecessor. Depois, chama 'removeNode()' para remover o predecessor do filho apropriado (e o faz recursivamente). Caso o filho do nó atual
+    não tenha pelo menos 't' chaves, mas o irmão tiver, realiza-se um processo semelhante, mas com o sucessor de 'k'. Se tanto o filho quanto o irmão do nó atual tiverem apenas 't-1' chaves, remove recursivamente o valor 'k'.
+
+    'removeNode()', por sua vez, encontra o índice 'idx' onde a chave 'k' está localizada e, se a chave estiver presente no nó, verifica se é uma folha. Se for, chama 'removeFromLeaf()', se não for, chama
+    'removeFromNonLeaf()'. Ao final, escreve as alterações no arquivo.
+
+    !!!!!!!!!!!!!!!!!!!!!VERIFICAR!!!!!!!!!!!!!!!!!!!!!!
+    A remoção dos nodes não salva eles no dataset, logo, para remover os 3 de uma vez, foi necessário rodar o run.c de maneira modificada para remover os 3 de uma só vez.
+    Abra a imagem "questao3.png" para verificar a resposta.
+
+
+4. Quais as funções relacionadas com a busca e o que cada uma delas faz? A operação de busca está corretamente implementada? Buscar 132486 e 990171.
+    As funções relacionadas à busca são 'searchRecursive()' e 'search()'.
+
+    'searchRecursive()' recebe como parâmetros a árvore 'tree', a chave 'key' a ser buscada e o nó 'root' a partir do qual a busca é realizada. Compara-se a chave 'key' com as chaves presentes no nó 'root' até encontrar
+    'key' ou uma chave maior que ela. Se a chave 'key' for encontrada, a função retorna o seu registro. Do contrário, se 'root' for uma folha, 'key' não está na árvore e a função retorna nulo. Se a chave 'key' não for
+    encontrada mas 'root' não for uma folha, lê-se o filho apropriado e chama-se a função 'searchRecursive()' novamente, de forma recursiva (nesse caso, a função retorna o retorno da busca recursiva).
+
+    'search()' recebe a árvore 'tree' e a chave 'key' a ser buscada. Lê-se o nó raiz da árvore e este é armazenado temporariamente em 'root'. Chama-se, então, a função 'searchRecursive()' passando o nó raiz 'root' como
+    parâmetro, retornando o resultado da busca.
+
+    A busca com os exemplos citados foi realizada com sucesso, utilizando o tamanho de 100 da árvore:
+
+    key	country	grate	score	rate
+    132486	IRQ	FAIL	32	19
+
+    key	country	grate	score	rate
+    990171	IND	FAIL	20	20
+
+
+5. O que faz a função traverse?
+    Basicamente, a função traverse é responsável por percorrer a árvore B de forma recursiva e exibir o conteúdo de cada nó, permitindo melhor visualizar a estrutura e os registros armazenados nela.
+
+    A função começa verificando se há nós na árvore (nó raiz != -1). Caso não hajam, retorna imediatamente, do contrário, lê o nó correspondente ao índice recebido como parâmetro e o armazena temporariamente em 'toPrint'.
+    Chama-se, em seguida, a função 'dispNode()' para imprimir o nó atual e, em um loop percorrendo os filhos dele, chama-se recursivamente a função 'traverse()', passando o índice do filho como parâmetro e,
+    consequentemente, percorrendo todos os nós e imprimindo-os. Por fim, a função libera a memória alocada para o nó temporário 'toPrint'.
+
+    Os registros do tipo recordNode estão sendo armazenados na memória principal e, portanto, são perdidos depois que o programa é fechado
+
+
+!6. Os registros criados do tipo recordNode estão sendo armazenados na memória principal ou em um arquivo? Depois de fechar o programa é possível recuperar esses registros criados?
+    Os registros criados do tipo `recordNode` estão sendo armazenados na memória principal. 

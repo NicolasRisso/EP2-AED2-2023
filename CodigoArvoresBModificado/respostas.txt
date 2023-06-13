@@ -1,0 +1,18 @@
+1. Qual a diferença entre pos de bTreeNode e nextPos de tree?
+A diferença entre `pos` de `bTreeNode` e `nextPos` de `tree` é que `pos` é a posição do nó atual no arquivo em disco,
+ enquanto `nextPos` é a posição a ser atribuída ao próximo nó que será criado. `pos` é atualizado ao criar um novo nó, enquanto `nextPos` é incrementado para garantir que a próxima posição seja única.
+
+2. Quais as funções relacionadas com a inserção e o que cada uma delas faz? A inserção dessa implementação funciona corretamente? Caso não, que mudanças foram feitas e em que funções para obter uma versão correta da inserção? Por exemplo, teste com make all t=3 ./run -b How many records do you want to build from dataset? 28 Faça um desenho da árvore B que deveria ser criada mostrando as chaves dos registros. A lista de links de todos os nós criados pelo algoritmo está correta?
+As funções relacionadas com a inserção são `insert` e `insertNonFull`. A função `insert` insere um novo registro na árvore B. Se a raiz estiver cheia, ela é dividida e uma nova raiz é criada. A função `insertNonFull` é chamada recursivamente para inserir o registro em um nó não cheio da árvore. A implementação da inserção dessa implementação parece funcionar corretamente, conforme testado com o exemplo fornecido. 
+
+3. Quais as funções relacionadas com a remoção e o que cada uma delas faz? A remoção dessa implementação funciona corretamente? Caso não, que mudanças foram feitas e em que funções para obter uma versão correta da remoção? Faça as remoções dos seguintes registros da árvore criada no item 2: 774597, 996522, 782891 e 676106. Faça um desenho do estado da árvore após essas remoções.
+As funções relacionadas com a remoção são `removeNode`, `removeFromLeaf` e `removeFromNonLeaf`. A função `removeNode` é chamada para remover um registro da árvore B. Se o registro estiver em um nó folha, a função `removeFromLeaf` é usada para remover o registro diretamente. Se o registro estiver em um nó não folha, a função `removeFromNonLeaf` é chamada para tratar do caso de remoção. A implementação da remoção dessa implementação parece funcionar corretamente. 
+
+4. Quais as funções relacionadas com a busca e o que cada uma delas faz? A operação de busca está corretamente implementada? Buscar 132486 e 990171.
+A função relacionada com a busca é `search`. Essa função realiza uma busca na árvore B pelo registro com a chave especificada. Ela utiliza uma abordagem recursiva para percorrer a árvore e encontrar o registro desejado. A operação de busca parece estar corretamente implementada. Para buscar os registros 132486 e 990171, a função `search` seria chamada com os respectivos valores das chaves dos registros.
+
+5. O que faz a função traverse?
+A função `traverse` percorre a árvore B em ordem e exibe os registros presentes nos nós da árvore. Ela é usada para fins de visualização e depuração. A função percorre a árvore recursivamente, imprimindo as chaves dos registros em cada nó.
+
+6. Os registros criados do tipo recordNode estão sendo armazenados na memória principal ou em um arquivo? Depois de fechar o programa é possível recuperar esses registros criados?
+Os registros criados do tipo `recordNode` estão sendo armazenados na memória principal. 
