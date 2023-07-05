@@ -1,0 +1,1 @@
+Se quiser aumentar a capacidade da Arvore B aumente o valor do LIMITE em implementation.c

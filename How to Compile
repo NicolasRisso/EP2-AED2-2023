@@ -9,4 +9,4 @@ gcc run.c -o run.exe
 ./run.exe -b
 
 #Compilar para deletar uma chave
-./run.exe -d [NUMERO DA KEU PARA DELETAR]
+./run.exe -d [NUMERO DA KEY PARA DELETAR]
