@@ -20,8 +20,8 @@ int main(int argc, char const *argv[])
 	scanf("%d",&len);
 
     recordNode *records = getData("data/dataset.csv", len);
-    bTree* tree = createTree("tree.dat",false);
-	recordNode* indice = createData();
+    bTree* tree = createTree("tree.dat",false); // cria a arvore com as chaves e as posições
+	recordNode* indice = createData(); // cria o indice com os dados dos livros
     
     for(i=0;i<len;i++)
     {

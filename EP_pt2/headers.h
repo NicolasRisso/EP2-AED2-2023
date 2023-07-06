@@ -27,27 +27,28 @@ int anoPublicacao;
 };
 typedef struct rec recordNode;
 
-struct bTreeNode
-{
-	bool isLeaf; 
-	int pos; 
-	int noOfRecs;
-	recordNode* recordArr[2 * t - 1];
-	int children[2 * t]; 
-};
-typedef struct bTreeNode bTreeNode;
-
 // struct bTreeNode
 // {
-// bool valid; //indica se o nó da árvore B foi eliminado ou não
-// int noOfRecs;
-// bool isLeaf;
-// int pos;
-// int keyRecArr[2 * t - 1]; //as chaves dos registros, que são no máximo 2t-1
-// int posRecArr[2 * t - 1]; //posições dos registros no arquivo data.dat, que são no máximo 2t-1
-// int children[2 * t]; //posições das páginas filhas no arquivo tree.dat, que são no máximo 2t
+// 	bool isLeaf; 
+// 	int pos; 
+// 	int noOfRecs;
+// 	recordNode* recordArr[2 * t - 1];
+// 	int children[2 * t]; 
 // };
 // typedef struct bTreeNode bTreeNode;
+
+struct bTreeNode
+{
+bool valid; //indica se o nó da árvore B foi eliminado ou não
+int noOfRecs;
+bool isLeaf;
+int pos;
+
+int keyRecArr[2 * t - 1]; //as chaves dos registros, que são no máximo 2t-1
+int posRecArr[2 * t - 1]; //posições dos registros no arquivo data.dat, que são no máximo 2t-1
+int children[2 * t]; //posições das páginas filhas no arquivo tree.dat, que são no máximo 2t
+};
+typedef struct bTreeNode bTreeNode;
 
 struct tree
 {

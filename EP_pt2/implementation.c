@@ -91,7 +91,7 @@ void enterData(recordNode* record, int id_num, char titulo[], char nomeCompletoP
 // Cria uma estrutura em memória principal a partir dos dados de uma observação no arquivo csv
 recordNode* getData(char *filepath, int len) {
     
-    recordNode *recordArr = malloc(sizeof(recordNode)*len);
+    recordNode *keyRecArr = malloc(sizeof(recordNode)*len);
     char delim = ','; char line[256];
     int file_no = 0;
     int i,codigoLivro,anoPublicacao,rate;
@@ -101,11 +101,11 @@ recordNode* getData(char *filepath, int len) {
     FILE *inpFile = fopen(filepath, "r");
     
     while(file_no < len && fscanf(inpFile, "%d,%[^,],%[^,],%d,%d", &codigoLivro, titulo, nomeCompletoPrimeiroAutor, &anoPublicacao, &rate)) {
-        enterData(&recordArr[file_no], codigoLivro, titulo, nomeCompletoPrimeiroAutor, anoPublicacao, rate);
+        enterData(&keyRecArr[file_no], codigoLivro, titulo, nomeCompletoPrimeiroAutor, anoPublicacao, rate);
         file_no++;
     }
 
-    return recordArr;
+    return keyRecArr;
 }
 
 //Divide um node criança de um node pai da Arvore B
@@ -120,7 +120,7 @@ void splitChild(bTree* tree, bTreeNode* x, int i, bTreeNode* y)
     // Copia metade dos registros do nó filho y para o novo nó z
 	for(j=0;j<t-1;j++)
 	{
-		z->recordArr[j] = y->recordArr[j+t];
+		z->keyRecArr[j] = y->keyRecArr[j+t];
 	}
 
 	if(!y->isLeaf)
@@ -145,10 +145,10 @@ void splitChild(bTree* tree, bTreeNode* x, int i, bTreeNode* y)
     // Desloca os registros do nó pai x para abrir espaço para o registro do nó y
 	for(j=(x->noOfRecs) - 1; j >= i;j--)
 	{
-		x->recordArr[j+1] = x->recordArr[j];
+		x->keyRecArr[j+1] = x->keyRecArr[j];
 	}
     // Insere o registro mediano do nó y no nó pai x
-	x->recordArr[i] = y->recordArr[t-1];
+	x->keyRecArr[i] = y->keyRecArr[t-1];
 	x->noOfRecs++;
 
     writeFile(tree, x, x->pos);
@@ -158,24 +158,44 @@ void splitChild(bTree* tree, bTreeNode* x, int i, bTreeNode* y)
 }
 
 // Insere um valor no Node caso não esteja cheio
-void insertNonFull(bTree* tree,bTreeNode* x,recordNode* record)
+void insertNonFull(bTree* tree,bTreeNode* x,recordNode* record, char* filepath)
 {	
 	int i = (x->noOfRecs)-1;    // Índice do último registro no nó atual
 	if(x->isLeaf == true)
 	{
-		while((i>=0) && (record->codigoLivro < x->recordArr[i]->codigoLivro))
+		while((i>=0) && (record->codigoLivro < x->keyRecArr[i]))
 		{
-			x->recordArr[i+1] = x->recordArr[i];    // Move registros maiores para a direita
+			x->keyRecArr[i+1] = x->keyRecArr[i];    // Move registros maiores para a direita
 			i--;
 		}
-		x->recordArr[i+1] = record;     // Insere o novo registro na posição correta
+		x->keyRecArr[i+1] = record->codigoLivro;     // Insere a chave do registro na arvore
 		(x->noOfRecs)++;
 
+
+//===============================inserção no indice=====================
+    recordNode *buffer = malloc(sizeof(recordNode)*LIMITE);
+
+    FILE *indice = fopen(filepath, "w");
+
+    fread(buffer, sizeof(recordNode), LIMITE, indice);
+
+    buffer[]
+
+    fwrite(buffer, sizeof(recordNode), LIMITE, arquivo);
+
+    fwrite()
+
+
+
+
+    free(buffer);
+
+//======================================================================
         writeFile(tree, x, x->pos);
 	}
 	else
 	{
-		while((i>=0) && (record->codigoLivro < x->recordArr[i]->codigoLivro))
+		while((i>=0) && (record->codigoLivro < x->keyRecArr[i]))
 		{
 			i=i-1;      // Encontra a posição para inserir o novo registro
 		}
@@ -185,7 +205,7 @@ void insertNonFull(bTree* tree,bTreeNode* x,recordNode* record)
 		if(childAtPosi->noOfRecs == (2*t-1))    // Se o nó filho estiver cheio
 		{
 			splitChild(tree,x,i+1,childAtPosi);     // Divide o nó filho 
-			if( x->recordArr[i+1]->codigoLivro < record->codigoLivro){
+			if( x->keyRecArr[i+1] < record->codigoLivro){
 				i++;
 			}
 		}
@@ -206,7 +226,7 @@ void insert(bTree* tree,recordNode* record)
 
 		bTreeNode* firstNode = malloc(sizeof(bTreeNode)); // aloca espaco para o nó
 		nodeInit(firstNode,true,tree); // inicia um nó
-		firstNode->recordArr[0] = record;
+		firstNode->keyRecArr[0] = record;
 		(firstNode->noOfRecs)++;
 
         writeFile(tree, firstNode, firstNode->pos); // insere nó na arvore
@@ -228,7 +248,7 @@ void insert(bTree* tree,recordNode* record)
 			splitChild(tree,newRoot,0,rootCopy); // divide o nó raiz e envia a mediana para o nó novo
 
 			int i=0;
-			if(newRoot->recordArr[0]->codigoLivro < record->codigoLivro){
+			if(newRoot->keyRecArr[0] < record->codigoLivro){
 				i++;
 			}
 			
@@ -278,7 +298,7 @@ void dispNode(bTreeNode* node)
 	printf("codigoLivros:\n");
 	for(int i = 0; i < node->noOfRecs; i++)
 	{
-		printf("%d ", node->recordArr[i]->codigoLivro);     // Imprime as chaves no nó
+		printf("%d ", node->keyRecArr[i]);     // Imprime as chaves no nó
 	}
 	printf("\n");
 	printf("Links:\n");
@@ -293,12 +313,12 @@ void dispNode(bTreeNode* node)
 recordNode* searchRecursive(bTree* tree, int codigoLivro, bTreeNode* root) {
     int i = 0;
     
-    while(i < root->noOfRecs && codigoLivro > root->recordArr[i]->codigoLivro) // descobre a posição do nó específico
+    while(i < root->noOfRecs && codigoLivro > root->keyRecArr[i]) // descobre a posição do nó específico
         i++;
     
     
-    if(i < root->noOfRecs && codigoLivro == root->recordArr[i]->codigoLivro)    // caso de encontro da codigoLivro
-        return root->recordArr[i];
+    if(i < root->noOfRecs && codigoLivro == root->keyRecArr[i])    // caso de encontro da codigoLivro
+        return root->keyRecArr[i];
     
     
     else if(root->isLeaf) {
@@ -330,7 +350,7 @@ recordNode* search(bTree* tree, int codigoLivro) {
 int findcodigoLivro(bTreeNode* node, int k) {
     int idx=0;
 
-    while (idx < node->noOfRecs && node->recordArr[idx]->codigoLivro < k)
+    while (idx < node->noOfRecs && node->keyRecArr[idx] < k)
         ++idx;
     return idx;
 }
@@ -338,7 +358,7 @@ int findcodigoLivro(bTreeNode* node, int k) {
 // remove o valor de uma folha
 void removeFromLeaf (bTree* tree, bTreeNode *node, int idx) {
     for (int i=idx+1; i<node->noOfRecs; ++i){ // rearranja os registros
-	    node->recordArr[i-1] = node->recordArr[i];
+	    node->keyRecArr[i-1] = node->keyRecArr[i];
     }
     node->noOfRecs--; // registra a remoção
 }
@@ -346,7 +366,7 @@ void removeFromLeaf (bTree* tree, bTreeNode *node, int idx) {
 // Remove um node não folha da árvore B 
 void removeFromNonLeaf(bTree* tree, bTreeNode *node, int idx) {
  
-    int k = node->recordArr[idx]->codigoLivro;
+    int k = node->keyRecArr[idx];
     
     bTreeNode *child = malloc(sizeof(bTreeNode));
     bTreeNode *sibling = malloc(sizeof(bTreeNode));
@@ -358,7 +378,7 @@ void removeFromNonLeaf(bTree* tree, bTreeNode *node, int idx) {
     // Se o filho do nó atual tem pelo menos t chaves, encontra o predecessor, substitui a chave a ser removida e remove recursivamente o predecessor
     if (child->noOfRecs >= t) {
         recordNode* pred = getPred(tree, node, idx);
-        node->recordArr[idx] = pred;
+        node->keyRecArr[idx] = pred;
         removeNode(tree, child, pred->codigoLivro); 
     }
  
@@ -366,7 +386,7 @@ void removeFromNonLeaf(bTree* tree, bTreeNode *node, int idx) {
     else if  (sibling->noOfRecs >= t)
     {
         recordNode* succ = getSucc(tree, node, idx);
-        node->recordArr[idx] = succ;
+        node->keyRecArr[idx] = succ;
         removeNode(tree, sibling, succ->codigoLivro); 
     }
  
@@ -387,7 +407,7 @@ void removeFromNonLeaf(bTree* tree, bTreeNode *node, int idx) {
 void removeNode(bTree* tree, bTreeNode* node, int k) {
 
     int idx = findcodigoLivro(node, k);
-    if (idx < node->noOfRecs && node->recordArr[idx]->codigoLivro == k) { // se a chave está no nó
+    if (idx < node->noOfRecs && node->keyRecArr[idx] == k) { // se a chave está no nó
         if (node->isLeaf){
 	        removeFromLeaf(tree, node, idx); // Remove a chave 'k' do nó folha
         } else {
@@ -443,7 +463,7 @@ recordNode* getPred(bTree* tree, bTreeNode *node, int idx) {
         readFile(tree, curr, curr->children[curr->noOfRecs]);
     }
         
-    recordNode* result = curr->recordArr[curr->noOfRecs-1]; // Retorna o último registro no nó folha
+    recordNode* result = curr->keyRecArr[curr->noOfRecs-1]; // Retorna o último registro no nó folha
     free(curr);
     return result;
 }
@@ -458,7 +478,7 @@ recordNode* getSucc(bTree* tree, bTreeNode *node, int idx) {
     }
  
     
-    recordNode* result = curr->recordArr[0]; // Retorna o primeiro registro (sucessor) no nó folha
+    recordNode* result = curr->keyRecArr[0]; // Retorna o primeiro registro (sucessor) no nó folha
     free(curr);
     return result;
 }
@@ -503,7 +523,7 @@ void borrowFromPrev(bTree* tree, bTreeNode *node, int idx) {
     
     // Desloca os registros no nó filho para acomodar o espaço para a nova chave
     for (int i=child->noOfRecs-1; i>=0; --i)
-        child->recordArr[i+1] = child->recordArr[i];
+        child->keyRecArr[i+1] = child->keyRecArr[i];
     
     // Desloca os ponteiros para os filhos no nó filho, se existirem
     if (!child->isLeaf) {
@@ -512,14 +532,14 @@ void borrowFromPrev(bTree* tree, bTreeNode *node, int idx) {
     }
  
     // Copia a última chave do nó irmão para o nó filho
-    child->recordArr[0] = node->recordArr[idx-1];
+    child->keyRecArr[0] = node->keyRecArr[idx-1];
  
     if (!node->isLeaf) {// Copia o último ponteiro para o filho do nó irmão para o nó filho, se existirem
         child->children[0] = sibling->children[sibling->noOfRecs];
         sibling->children[sibling->noOfRecs] = -1; 
     }
  
-    node->recordArr[idx-1] = sibling->recordArr[sibling->noOfRecs-1]; // Atualiza a chave no nó atual com a última chave do nó irmão
+    node->keyRecArr[idx-1] = sibling->keyRecArr[sibling->noOfRecs-1]; // Atualiza a chave no nó atual com a última chave do nó irmão
  
     child->noOfRecs += 1;
     sibling->noOfRecs -= 1;
@@ -544,16 +564,16 @@ void borrowFromNext(bTree* tree, bTreeNode *node, int idx) {
     readFile(tree, sibling, node->children[idx+1]);
     
     
-    child->recordArr[(child->noOfRecs)] = node->recordArr[idx]; // Move a chave do irmão para o nó filho
+    child->keyRecArr[(child->noOfRecs)] = node->keyRecArr[idx]; // Move a chave do irmão para o nó filho
  
     if (!(child->isLeaf))
         child->children[(child->noOfRecs)+1] = sibling->children[0];
  
     
-    node->recordArr[idx] = sibling->recordArr[0];   // Atualiza a chave no nó pai com a primeira chave do irmão posterior
+    node->keyRecArr[idx] = sibling->keyRecArr[0];   // Atualiza a chave no nó pai com a primeira chave do irmão posterior
  
     for (int i=1; i<sibling->noOfRecs; ++i) // Desloca as chaves restantes no irmão posterior para preencher o espaço vazio
-        sibling->recordArr[i-1] = sibling->recordArr[i];
+        sibling->keyRecArr[i-1] = sibling->keyRecArr[i];
  
     if (!sibling->isLeaf) {
         for(int i=1; i<=sibling->noOfRecs; ++i)
@@ -585,10 +605,10 @@ bTreeNode* merge(bTree* tree, bTreeNode *node, int idx) {
     readFile(tree, child, node->children[idx]);
     readFile(tree, sibling, node->children[idx+1]);
     
-    child->recordArr[t-1] = node->recordArr[idx]; // Move a chave do nó pai para o nó filho
+    child->keyRecArr[t-1] = node->keyRecArr[idx]; // Move a chave do nó pai para o nó filho
  
     for (int i=0; i<sibling->noOfRecs; ++i) // Move as chaves do irmão posterior para o nó filho
-        child->recordArr[i+t] = sibling->recordArr[i];
+        child->keyRecArr[i+t] = sibling->keyRecArr[i];
  
     if (!child->isLeaf) { // Move os filhos do irmão posterior para o nó filho, se existirem
         for(int i=0; i<=sibling->noOfRecs; ++i)
@@ -596,7 +616,7 @@ bTreeNode* merge(bTree* tree, bTreeNode *node, int idx) {
     }
 
     for (int i=idx+1; i<node->noOfRecs; ++i) // Reposiciona as chaves do nó pai e os filhos após a fusão
-        node->recordArr[i-1] = node->recordArr[i];
+        node->keyRecArr[i-1] = node->keyRecArr[i];
  
     for (int i=idx+2; i<=node->noOfRecs; ++i) 
         node->children[i-1] = node->children[i];

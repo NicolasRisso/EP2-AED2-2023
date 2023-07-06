@@ -29,17 +29,20 @@ int main(int argc, char const *argv[])
 
     if(!strcmp(argv[1],"-d"))
     {
-	    int key;
-	    sscanf(argv[2],"%d",&key);
-	    bool res = removeFromTree(tree,key);
-    	if(res)
-    	{
-    		printf("Successfull Deletion.\n");
-    	}
-    	else
-    	{
-    		printf("Deletion not successful.\n");
-    	}
+	    int key, i;
+		for(i = 2; i <= (argc - 1); i++){
+			sscanf(argv[i],"%d",&key);
+			bool res = removeFromTree(tree,key);
+			if(res)
+			{
+				printf("Successfull Deletion of %d key.\n", key);
+			}
+			else
+			{
+				printf("Deletion not successful. (%d key)\n", key);
+			}
+		}
+	   
     }
 
         traverse(tree, tree->root);
