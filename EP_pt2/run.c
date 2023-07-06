@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
     
     for(i=0;i<len;i++)
     {
-    	insert(tree,&records[i]);
+    	insert(tree,&records[i],"data.dat");
     }
 
     if(!strcmp(argv[1],"-d"))
@@ -50,17 +50,17 @@ int main(int argc, char const *argv[])
 	    // printf("Time Taken to build tree: %f seconds\n",timeToBuild);
 	    int key;
 	    sscanf(argv[2],"%d",&key);
-	    recordNode* res = search(tree,key);
+	    int res = search(tree,key);
 
-		if(res != NULL) {
-			printf("key\tcountry\tgrate\tscore\trate\n");
-			printf("%d\t",res->codigoLivro );
-			printf("%s\t",res->titulo );
-			printf("%s\t",res->nomeCompletoPrimeiroAutor );
-			printf("%d\t",res->anoPublicacao );
+		if(res != -1) {
+			// printf("key\tcountry\tgrate\tscore\trate\n");
+			// printf("%d\t",res->codigoLivro );
+			// printf("%s\t",res->titulo );
+			// printf("%s\t",res->nomeCompletoPrimeiroAutor );
+			// printf("%d\t",res->anoPublicacao );
 //			printf("%d\n",res->rate );
 
-			free(res);
+//			free(res);
 		} else
 			printf("Record not found!");
     }
