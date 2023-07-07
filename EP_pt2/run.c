@@ -48,12 +48,17 @@ int main(int argc, char const *argv[])
 	if(!strcmp(argv[1],"-s"))
     {
 	    // printf("Time Taken to build tree: %f seconds\n",timeToBuild);
+		printf("FUNICIONOU ");
 	    int key;
 	    sscanf(argv[2],"%d",&key);
 	    int res = search(tree,key);
 
 		if(res != -1) {
-			// printf("key\tcountry\tgrate\tscore\trate\n");
+
+			FILE* data = fopen("data.dat", "r");
+
+			printf("key\tcountry\tgrate\tscore\trate\n");
+			printf("%d",data[res]);
 			// printf("%d\t",res->codigoLivro );
 			// printf("%s\t",res->titulo );
 			// printf("%s\t",res->nomeCompletoPrimeiroAutor );
