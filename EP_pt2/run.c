@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
 	
 	int len,i;
     printf("How many records do you want to build from dataset?");
-	scanf("%d",&len);
+	scanf("%d", &len);
 
     recordNode *records = getData("data/dataset.csv", len);
     bTree* tree = createTree("tree.dat",false); // cria a arvore com as chaves e as posições
@@ -25,6 +25,7 @@ int main(int argc, char const *argv[])
     
     for(i=0;i<len;i++)
     {
+//		printf("FUNICIONOU %i\n", i);
     	insert(tree,&records[i],"data.dat");
     }
 
@@ -48,7 +49,6 @@ int main(int argc, char const *argv[])
 	if(!strcmp(argv[1],"-s"))
     {
 	    // printf("Time Taken to build tree: %f seconds\n",timeToBuild);
-		printf("FUNICIONOU ");
 	    int key;
 	    sscanf(argv[2],"%d",&key);
 	    int res = search(tree,key);
