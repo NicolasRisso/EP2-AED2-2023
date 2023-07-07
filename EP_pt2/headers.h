@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#define t 3
+#define t 5
 
 // 1 , AFG , DIST , 93 , 18
 

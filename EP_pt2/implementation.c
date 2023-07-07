@@ -432,7 +432,12 @@ void removeNode(bTree* tree, bTreeNode* node, int k) {
             fill(tree, node, idx);
             readFile(tree, childAtPosi, node->children[idx]);
         }
+        else
+        {
+            removeNode(tree, childAtPosi, k);
+        }
 
+        /*
         if (flag && idx > node->noOfRecs) {
             // Caso a flag seja verdadeira e o índice seja maior que o número de registros,
             // lê o nó irmão à esquerda do nó filho e remove a chave 'k' dele
@@ -447,6 +452,7 @@ void removeNode(bTree* tree, bTreeNode* node, int k) {
         else {
             removeNode(tree, childAtPosi, k);
         }
+        */        
         
         writeFile(tree, childAtPosi, childAtPosi->pos);
         free(childAtPosi);
