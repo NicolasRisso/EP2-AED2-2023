@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#define t 5
+#define t 3
 
 // 1 , AFG , DIST , 93 , 18
 
@@ -62,7 +62,7 @@ typedef struct tree bTree;
 
 bTree* createTree(char* fileName,bool mode);
 bTreeNode* nodeInit(bTreeNode* node,bool isLeaf,bTree* tree);
-void insert(bTree* tree,recordNode* record, char* filepath);
+void insert(bTree* tree,recordNode* record);
 void delete(bTree* tree,int key);
 void traverse(bTree* tree, int root);
 void dispNode(bTreeNode* node);

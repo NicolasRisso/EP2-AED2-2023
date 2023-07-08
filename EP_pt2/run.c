@@ -26,7 +26,7 @@ int main(int argc, char const *argv[])
     for(i=0;i<len;i++)
     {
 //		printf("FUNICIONOU %i\n", i);
-    	insert(tree,&records[i],"data.dat");
+    	insert(tree,&records[i]);//,"data.dat");
     }
 
     if(!strcmp(argv[1],"-d"))
