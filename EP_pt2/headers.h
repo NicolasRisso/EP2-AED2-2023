@@ -1,13 +1,33 @@
+/*
+		            AUTORES
+
+	Andre Fabiano de Carvalho - 13672425
+	Nicolas Pereira Risso Vieira - 13672262
+	Vitor Borges Santana - 13720129
+
+*/
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#define t 3
+#define t 5
 
 // 1 , AFG , DIST , 93 , 18
 
+char *strsep(char **stringp, const char *delim) { 
+    char *rv = *stringp; 
+    if (rv) { 
+        *stringp += strcspn(*stringp, delim); 
+        if (**stringp) 
+            *(*stringp)++ = '\0'; 
+        else 
+            *stringp = 0; } 
+    return rv; 
+}
+
 struct rec
 {
+	bool isValid;
 	int codigoLivro;
 	// rest
 	char titulo[30];
@@ -22,7 +42,10 @@ struct bTreeNode
 	bool isLeaf; 
 	int pos; 
 	int noOfRecs;
-	recordNode* recordArr[2 * t - 1];
+	bool isValid;
+
+	recordNode* keyRecArr[2 * t - 1];
+	recordNode* posRecArr[2 * t - 1];
 	int children[2 * t]; 
 };
 typedef struct bTreeNode bTreeNode;
