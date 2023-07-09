@@ -6,47 +6,24 @@
 
 // 1 , AFG , DIST , 93 , 18
 
-// struct rec
-// {
-// 	int key;
-// 	// rest
-// 	char country[5];
-// 	char grate[10];
-// 	int score;
-// 	int rate;
-// };
-// typedef struct rec recordNode;
-
 struct rec
 {
-bool valid; // indica se o registro foi eliminado ou não
-int codigoLivro; // chave
-char titulo[30];
-char nomeCompletoPrimeiroAutor[30];
-int anoPublicacao;
+	int codigoLivro;
+	// rest
+	char titulo[30];
+	char nomeCompletoPrimeiroAutor[30];
+	int anoPublicacao;
+	int rate;
 };
 typedef struct rec recordNode;
 
-// struct bTreeNode
-// {
-// 	bool isLeaf; 
-// 	int pos; 
-// 	int noOfRecs;
-// 	recordNode* recordArr[2 * t - 1];
-// 	int children[2 * t]; 
-// };
-// typedef struct bTreeNode bTreeNode;
-
 struct bTreeNode
 {
-bool valid; //indica se o nó da árvore B foi eliminado ou não
-int noOfRecs;
-bool isLeaf;
-int pos;
-
-int keyRecArr[2 * t - 1]; //as chaves dos registros, que são no máximo 2t-1
-int posRecArr[2 * t - 1]; //posições dos registros no arquivo data.dat, que são no máximo 2t-1
-int children[2 * t]; //posições das páginas filhas no arquivo tree.dat, que são no máximo 2t
+	bool isLeaf; 
+	int pos; 
+	int noOfRecs;
+	recordNode* recordArr[2 * t - 1];
+	int children[2 * t]; 
 };
 typedef struct bTreeNode bTreeNode;
 
@@ -56,7 +33,6 @@ struct tree
 	FILE* fp;
 	int root;
 	int nextPos;
-	int n_elements;
 };
 typedef struct tree bTree;
 
@@ -70,17 +46,17 @@ void writeFile(bTree* ptr_tree, bTreeNode* p, int pos);
 void readFile(bTree* ptr_tree, bTreeNode* p, int pos);
 
 
-void enterData(recordNode* record, int id_num, char country[], char Grate[], int Score, int Rate);
+void enterData(recordNode* record, int id_num, char titulo[], char nomeCompletoPrimeiroAutor[], int anoPublicacao, int Rate);
 recordNode* getData(char *filepath, int len);
-int search(bTree* tree, int key);
-int searchRecursive(bTree* tree, int key, bTreeNode* root);
+recordNode* search(bTree* tree, int key);
+recordNode* searchRecursive(bTree* tree, int key, bTreeNode* root);
 bool removeFromTree(bTree* tree, int key);
 bTreeNode* merge(bTree* tree, bTreeNode *node, int idx);
 void borrowFromNext(bTree* tree, bTreeNode *node, int idx);
 void borrowFromPrev(bTree* tree, bTreeNode *node, int idx);
 void fill(bTree* tree, bTreeNode *node, int idx);
-int getSucc(bTree* tree, bTreeNode *node, int idx);
-int getPred(bTree* tree, bTreeNode *node, int idx);
+recordNode *getSucc(bTree* tree, bTreeNode *node, int idx);
+recordNode *getPred(bTree* tree, bTreeNode *node, int idx);
 void removeFromNonLeaf(bTree* tree, bTreeNode *node, int idx);
 void removeFromLeaf (bTree* tree, bTreeNode *node, int idx);
 void removeNode(bTree* tree, bTreeNode* node, int k);

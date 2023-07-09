@@ -17,31 +17,32 @@ int main(int argc, char const *argv[])
 	
 	int len,i;
     printf("How many records do you want to build from dataset?");
-	scanf("%d", &len);
+	scanf("%d",&len);
 
     recordNode *records = getData("data/dataset.csv", len);
-    bTree* tree = createTree("tree.dat",false); // cria a arvore com as chaves e as posições
-	recordNode* indice = createData(); // cria o indice com os dados dos livros
+    bTree* tree = createTree("tree.dat",false);
     
     for(i=0;i<len;i++)
     {
-//		printf("FUNICIONOU %i\n", i);
-    	insert(tree,&records[i]);//,"data.dat");
+    	insert(tree,&records[i]);
     }
 
     if(!strcmp(argv[1],"-d"))
     {
-	    int key;
-	    sscanf(argv[2],"%d",&key);
-	    bool res = removeFromTree(tree,key);
-    	if(res)
-    	{
-    		printf("Successfull Deletion.\n");
-    	}
-    	else
-    	{
-    		printf("Deletion not successful.\n");
-    	}
+	    int key, i;
+		for(i = 2; i <= (argc - 1); i++){
+			sscanf(argv[i],"%d",&key);
+			bool res = removeFromTree(tree,key);
+			if(res)
+			{
+				printf("Successfull Deletion of %d key.\n", key);
+			}
+			else
+			{
+				printf("Deletion not successful. (%d key)\n", key);
+			}
+		}
+	   
     }
 
         traverse(tree, tree->root);
@@ -51,21 +52,17 @@ int main(int argc, char const *argv[])
 	    // printf("Time Taken to build tree: %f seconds\n",timeToBuild);
 	    int key;
 	    sscanf(argv[2],"%d",&key);
-	    int res = search(tree,key);
+	    recordNode* res = search(tree,key);
 
-		if(res != -1) {
+		if(res != NULL) {
+			printf("key\ttitulo\tgrate\tscore\trate\n");
+			printf("%d\t",res->codigoLivro );
+			printf("%s\t",res->titulo );
+			printf("%s\t",res->nomeCompletoPrimeiroAutor );
+			printf("%d\t",res->anoPublicacao );
+			printf("%d\n",res->rate );
 
-			FILE* data = fopen("data.dat", "r");
-
-			printf("key\tcountry\tgrate\tscore\trate\n");
-			printf("%d",data[res]);
-			// printf("%d\t",res->codigoLivro );
-			// printf("%s\t",res->titulo );
-			// printf("%s\t",res->nomeCompletoPrimeiroAutor );
-			// printf("%d\t",res->anoPublicacao );
-//			printf("%d\n",res->rate );
-
-//			free(res);
+			free(res);
 		} else
 			printf("Record not found!");
     }
